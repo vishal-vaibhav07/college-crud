@@ -6,11 +6,18 @@
   "scripts": {
     "start": "node server.js"
   },
-  "keywords": ["college", "management", "students", "faculty", "system"],
+  "keywords": [
+    "college",
+    "management",
+    "students",
+    "faculty",
+    "system"
+  ],
   "author": "Vishal Vaibhav",
   "license": "MIT",
   "type": "commonjs",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.7"
   }
 }
