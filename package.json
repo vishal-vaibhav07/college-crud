@@ -1,15 +1,15 @@
 {
-  "name": "Project1",
+  "name": "project1",
   "version": "1.0.0",
+  "description": "A college management system for managing students and faculty.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["college", "management", "students", "faculty", "system"],
+  "author": "Vishal Vaibhav",
+  "license": "MIT",
   "type": "commonjs",
-  "description": "",
   "dependencies": {
     "express": "^4.18.2"
   }

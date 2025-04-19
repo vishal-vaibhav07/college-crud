@@ -1,1 +1,1 @@
-web: node [server.js](http://_vscodecontentref_/2)
+web: node server.js
