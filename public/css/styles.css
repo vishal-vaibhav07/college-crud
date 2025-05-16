@@ -35,7 +35,7 @@ th, td {
 }
 
 th {
-    background-color: #35424a;
+    background-color: #343b3f;
     color: white;
 }
 
@@ -58,3 +58,17 @@ form {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+.custom-header {
+    background-color: #5f93b6; /* Indigo */
+    color: white; /* Make sure text is readable */
+  }
+  .fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+  

@@ -1,12 +1,3 @@
-// List of all cities
-const cities = [
-    "Ahmedabad", "Alappuzha", "Amritsar", "Ayodhaya", "Bangalore", "Begusarai", "Chennai", 
-    "Darbhanga", "Delhi", "Gaya", "Gurugram", "Jamshedpur", "Kannur", "Lucknow", "Mangalore", 
-    "Meerut", "Mumbai", "Muzaffarpur", "Munnar", "Nagpur", "Nalanda", "Noida", "Ooty", "Pune", "Purnia", 
-    "Raipur", "Ranchi", "Sitamarhi", "Tirupati", "Varanasi", "Vellore", "Vijayawada", 
-    "Vishakhapatnam"
-].sort();
-
 // Fetch and display student data
 function fetchStudents() {
     fetch('/students')
@@ -18,12 +9,12 @@ function fetchStudents() {
                 const row = `
                     <tr>
                         <td>${index + 1}</td>
-                        <td>${student.name}</td>
+                        <td>${student.name.replace(/'/g, "\\'")}</td>
                         <td>${student.department}</td>
                         <td>${student.regno}</td>
-                        <td>${student.city}</td>
+                        <td>${student.city.replace(/'/g, "\\'")}</td>
                         <td>
-                            <button class="btn btn-warning btn-sm" onclick="editStudent(${student.id}, '${student.name}', '${student.department}', '${student.regno}', '${student.city}')">Edit</button>
+                            <button class="btn btn-warning btn-sm" onclick="editStudent(${student.id}, '${student.name.replace(/'/g, "\\'")}', '${student.department}', '${student.regno}', '${student.city.replace(/'/g, "\\'")}')">Edit</button>
                             <button class="btn btn-danger btn-sm" onclick="deleteStudent(${student.id})">Delete</button>
                         </td>
                     </tr>
@@ -41,18 +32,8 @@ function editStudent(id, name, department, regno, city) {
     document.getElementById('edit-department').value = department;
     document.getElementById('edit-regno').value = regno;
 
-    // Populate the city dropdown
-    const cityDropdown = document.getElementById('edit-city');
-    cityDropdown.innerHTML = ''; // Clear existing options
-    cities.forEach((cityOption) => {
-        const option = document.createElement('option');
-        option.value = cityOption;
-        option.textContent = cityOption;
-        if (cityOption === city) {
-            option.selected = true; // Select the current city
-        }
-        cityDropdown.appendChild(option);
-    });
+    // Populate the city field directly
+    document.getElementById('edit-city').value = city;
 
     const editModal = new bootstrap.Modal(document.getElementById('editStudentModal'));
     editModal.show();
@@ -87,7 +68,14 @@ function updateStudent() {
         })
         .catch(error => console.error('Error updating student:', error));
 }
+// Show success modal with a custom message
+function showSuccessMessage(message) {
+    const successModalMessage = document.getElementById('successModalMessage');
+    successModalMessage.textContent = message;
 
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    successModal.show();
+}
 // Delete a student
 function deleteStudent(id) {
     if (!confirm('Are you sure you want to delete this student?')) return;
@@ -97,7 +85,7 @@ function deleteStudent(id) {
     })
         .then(response => response.text())
         .then(message => {
-            alert(message);
+            showSuccessMessage('Student has been deleted successfully!');
             fetchStudents(); // Refresh the table
         })
         .catch(error => console.error('Error deleting student:', error));
@@ -124,9 +112,11 @@ document.getElementById('student-form').addEventListener('submit', function (e) 
             city: city,
         }),
     })
-        .then(response => response.text())
+    .then(response => response.text())
         .then(message => {
-            alert(message);
+            const modal = new bootstrap.Modal(document.getElementById('successModal'));
+            modal.show();
+            showSuccessMessage('Student onboarding successfully!');
             fetchStudents(); // Refresh the table
             document.getElementById('student-form').reset(); // Clear the form
         })
@@ -138,6 +128,8 @@ function searchStudents() {
     const searchValue = document.getElementById('search-bar').value.toLowerCase();
     const tableBody = document.getElementById('student-table-body');
     const rows = tableBody.getElementsByTagName('tr');
+    const noRecordsMessage = document.getElementById('no-records-message');
+    let hashMatch = false;
 
     Array.from(rows).forEach(row => {
         const name = row.cells[1].textContent.toLowerCase();
@@ -145,10 +137,19 @@ function searchStudents() {
 
         if (name.includes(searchValue) || regno.includes(searchValue)) {
             row.style.display = ''; // Show row
+            hashMatch = true; // At least one match found
         } else {
             row.style.display = 'none'; // Hide row
         }
     });
+    // Show/hide "No records found" message
+    if (!hashMatch) {
+        noRecordsMessage.classList.add('fade-in');
+        noRecordsMessage.style.display = 'block';
+    } else {
+        noRecordsMessage.style.display = 'none';
+    } 
+
 }
 
 // Fetch students on page load

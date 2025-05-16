@@ -19,5 +19,14 @@
   "dependencies": {
     "express": "^4.x",
     "sqlite3": "^5.x"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vishal-vaibhav07/college-management.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vishal-vaibhav07/college-management/issues"
+  },
+  "homepage": "https://github.com/vishal-vaibhav07/college-management#readme"
 }

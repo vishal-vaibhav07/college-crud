@@ -1,12 +1,3 @@
-// List of all cities
-const cities = [
-    "Ahmedabad", "Alappuzha", "Amritsar", "Ayodhaya", "Bangalore", "Begusarai", "Chennai", 
-    "Darbhanga", "Delhi", "Gaya", "Gurugram", "Jamshedpur", "Kannur", "Lucknow", "Mangalore", 
-    "Meerut", "Mumbai", "Muzaffarpur", "Munnar", "Nagpur", "Nalanda", "Noida", "Ooty", "Pune", "Purnia", 
-    "Raipur", "Ranchi", "Sitamarhi", "Tirupati", "Varanasi", "Vellore", "Vijayawada", 
-    "Vishakhapatnam"
-].sort();
-
 // Fetch and display faculty data
 function fetchFaculty() {
     fetch('/faculty')
@@ -19,11 +10,11 @@ function fetchFaculty() {
                     <tr>
                         <td>${index + 1}</td>
                         <td>${faculty.empid}</td>
-                        <td>${faculty.name}</td>
+                        <td>${faculty.name.replace(/'/g, "\\'")}</td>
                         <td>${faculty.department}</td>
-                        <td>${faculty.city}</td>
+                        <td>${faculty.city.replace(/'/g, "\\'")}</td>
                         <td>
-                            <button class="btn btn-warning btn-sm" onclick="editFaculty(${faculty.id}, '${faculty.empid}', '${faculty.name}', '${faculty.department}', '${faculty.city}')">Edit</button>
+                            <button class="btn btn-warning btn-sm" onclick="editFaculty(${faculty.id}, '${faculty.empid}', '${faculty.name.replace(/'/g,"\\'")}', '${faculty.department}', '${faculty.city.replace(/'/g, "\\'")}')">Edit</button>
                             <button class="btn btn-danger btn-sm" onclick="deleteFaculty(${faculty.id})">Delete</button>
                         </td>
                     </tr>
@@ -40,19 +31,7 @@ function editFaculty(id, empid, name, department, city) {
     document.getElementById('edit-empid').value = empid;
     document.getElementById('edit-name').value = name;
     document.getElementById('edit-department').value = department;
-
-    // Populate the city dropdown
-    const cityDropdown = document.getElementById('edit-city');
-    cityDropdown.innerHTML = ''; // Clear existing options
-    cities.forEach((cityOption) => {
-        const option = document.createElement('option');
-        option.value = cityOption;
-        option.textContent = cityOption;
-        if (cityOption === city) {
-            option.selected = true; // Select the current city
-        }
-        cityDropdown.appendChild(option);
-    });
+    document.getElementById('edit-city').value = city; // Directly set the city value
 
     const editModal = new bootstrap.Modal(document.getElementById('editFacultyModal'));
     editModal.show();
@@ -88,6 +67,15 @@ function updateFaculty() {
         .catch(error => console.error('Error updating faculty:', error));
 }
 
+// Show success modal with a custom message
+function showSuccessMessage(message) {
+    const successModalMessage = document.getElementById('successModalMessage');
+    successModalMessage.textContent = message;
+
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    successModal.show();
+}
+
 // Delete a faculty member
 function deleteFaculty(id) {
     if (!confirm('Are you sure you want to delete this faculty member?')) return;
@@ -97,7 +85,7 @@ function deleteFaculty(id) {
     })
         .then(response => response.text())
         .then(message => {
-            alert(message);
+            showSuccessMessage('Faculty member deleted successfully!');
             fetchFaculty(); // Refresh the table
         })
         .catch(error => console.error('Error deleting faculty:', error));
@@ -144,12 +132,40 @@ document.getElementById('faculty-form').addEventListener('submit', function (e) 
     })
         .then(response => response.text())
         .then(message => {
-            alert(message);
+            showSuccessMessage('Faculty onboarding successfully!');
             fetchFaculty(); // Refresh the table
             document.getElementById('faculty-form').reset(); // Clear the form
         })
         .catch(error => console.error('Error adding faculty:', error));
 });
+
+// Search students by name or registration number
+function searchFaculty() {
+    const searchValue = document.getElementById('search-bar').value.toLowerCase();
+    const tableBody = document.getElementById('faculty-table-body');
+    const rows = tableBody.getElementsByTagName('tr');
+    const noRecordsMessage = document.getElementById('no-records-message');
+    let hashMatch = false;
+
+    Array.from(rows).forEach(row => {
+        const name = row.cells[1].textContent.toLowerCase();
+        const empid = row.cells[3].textContent.toLowerCase();
+
+        if (name.includes(searchValue) || empid.includes(searchValue)) {
+            row.style.display = ''; // Show row
+            hashMatch = true; // At least one match found
+        } else {
+            row.style.display = 'none'; // Hide row
+        }
+    });
+    // Show/hide "No records found" message
+    if (!hashMatch) {
+        noRecordsMessage.classList.add('fade-in');
+        noRecordsMessage.style.display = 'block';
+    } else {
+        noRecordsMessage.style.display = 'none';
+    } 
+}
 
 // Fetch faculty on page load
 document.addEventListener('DOMContentLoaded', fetchFaculty);

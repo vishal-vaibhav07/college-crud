@@ -42,7 +42,7 @@
 
         <!-- Form to Add Faculty -->
         <div class="form-container">
-            <h3>Add Faculty</h3>
+            <h3>Faculty Onboarding</h3>
             <form id="faculty-form">
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" id="empid" name="empid" placeholder="Enter Employee ID" required>
@@ -56,49 +56,17 @@
                     <input type="text" class="form-control" id="department" name="department" placeholder="Enter Department" required>
                     <label for="department">Department</label>
                 </div>
-                <div class="mb-3">
-                    <label for="city" class="form-label">City</label>
-                    <select class="form-select" id="city" name="city" required>
-                        <option value="" disabled selected>Select City</option>
-                        <option value="Ahmedabad">Ahmedabad</option>
-                        <option value="Alappuzha">Alappuzha</option>
-                        <option value="Amritsar">Amritsar</option>
-                        <option value="Ayodhaya">Ayodhaya</option>
-                        <option value="Begusarai">Begusarai</option>
-                        <option value="Bhagalpur">Bhagalpur</option>
-                        <option value="Darbhanga">Darbhanga</option>
-                        <option value="Gaya">Gaya</option>
-                        <option value="Gurugram">Gurugram</option>
-                        <option value="Hyderabad">Hyderabad</option>
-                        <option value="Indore">Indore</option>
-                        <option value="Jaipur">Jaipur</option>
-                        <option value="Kannur">Kannur</option>
-                        <option value="Lucknow">Lucknow</option>
-                        <option value="Meerut">Meerut</option>
-                        <option value="Muzaffarpur">Muzaffarpur</option>
-                        <option value="Noida">Noida</option>
-                        <option value="Patna">Patna</option>
-                        <option value="Purnia">Purnia</option>
-                        <option value="Raipur">Raipur</option>
-                        <option value="Sitamarhi">Sitamarhi</option>
-                        <option value="Tirupati">Tirupati</option>
-                        <option value="Vellore">Vellore</option>
-                        <option value="Varanasi">Varanasi</option>
-                        <option value="Vijayawada">Vijayawada</option>
-                        <option value="Vishakhapatnam">Vishakhapatnam</option>
-                        <option value="Bangalore">Bangalore</option>
-                        <option value="Chennai">Chennai</option>
-                        <option value="Delhi">Delhi</option>
-                        <option value="Mumbai">Mumbai</option>
-                    </select>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="city" placeholder="Enter City" required>
+                    <label for="edit-regno">City</label> 
                 </div>
-                <button type="submit" class="btn btn-primary">Add Faculty</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
 
         <!-- Faculty Table -->
-        <table class="table table-bordered mt-5">
-            <thead class="table-dark">
+        <table class="table table-bordered mt-4">
+            <thead class="custom-header">
                 <tr>
                     <th>Sl. No</th>
                     <th>Employee ID</th>
@@ -112,6 +80,11 @@
                 <!-- Dynamic rows will be added here -->
             </tbody>
         </table>
+        <div id="no-records-message" class="card bg-light text-center" style="display: none; padding: 1rem; margin-top: 1rem;">
+            <div class="card-body text-danger">
+                <h5>No matching records found.</h5>
+            </div>
+        </div>  
     </div>
 
     <!-- Edit Faculty Modal -->
@@ -137,18 +110,30 @@
                             <input type="text" class="form-control" id="edit-department" placeholder="Enter Department" required>
                             <label for="edit-department">Department</label>
                         </div>
-                        <div class="mb-3">
-                            <label for="edit-city" class="form-label">City</label>
-                            <select class="form-select" id="edit-city" required>
-                                <option value="Ahmedabad">Ahmedabad</option>
-                                <option value="Bangalore">Bangalore</option>
-                                <option value="Chennai">Chennai</option>
-                                <option value="Delhi">Delhi</option>
-                                <option value="Mumbai">Mumbai</option>
-                            </select>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="edit-city" placeholder="Enter City" required>
+                            <label for="edit-city">City</label>
                         </div>
                         <button type="button" class="btn btn-primary" onclick="updateFaculty()">Save Changes</button>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="successModalLabel">Success</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="successModalMessage">
+                    <!-- Message will be dynamically set here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>

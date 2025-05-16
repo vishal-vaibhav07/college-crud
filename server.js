@@ -5,6 +5,10 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.listen(4000, () => {
+  console.log('Server running at http://localhost:3000');
+});     
+
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public'))); // Serve static files (e.g., HTML, CSS, JS)
@@ -146,11 +150,6 @@ app.delete('/delete-faculty/:id', (req, res) => {
         }
         res.send('Faculty member deleted successfully!');
     });
-});
-
-// Fallback route for unmatched paths
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start the server
