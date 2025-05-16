@@ -54,13 +54,26 @@ db.serialize(() => {
 // Routes for Students
 app.post('/add-student', (req, res) => {
     const { name, department, regno, city } = req.body;
-    const query = `INSERT INTO students (name, department, regno, city) VALUES (?, ?, ?, ?)`;
-    db.run(query, [name, department, regno, city], function (err) {
+    // Check if regno already exists
+    const checkQuery = `SELECT * FROM students WHERE regno = ?`;
+    db.get(checkQuery, [regno], (err, row) => {
         if (err) {
-            console.error('Error inserting data:', err.message);
-            return res.status(500).send('Error inserting data.');
+            console.error('Error checking regno:', err.message);
+            return res.status(500).send('Error checking registration number.');
         }
-        res.send('Student added successfully!');
+        if (row) {
+            // regno already exists
+            return res.status(400).send("Can't add: Registration number already exists.");
+        }
+        // If not exists, insert new student
+        const insertQuery = `INSERT INTO students (name, department, regno, city) VALUES (?, ?, ?, ?)`;
+        db.run(insertQuery, [name, department, regno, city], function (err) {
+            if (err) {
+                console.error('Error inserting data:', err.message);
+                return res.status(500).send('Error inserting data.');
+            }
+            res.send('Student added successfully!');
+        });
     });
 });
 
@@ -105,13 +118,23 @@ app.delete('/delete-student/:id', (req, res) => {
 // Routes for Faculty
 app.post('/add-faculty', (req, res) => {
     const { empid, name, department, city } = req.body;
-    const query = `INSERT INTO faculty (empid, name, department, city) VALUES (?, ?, ?, ?)`;
-    db.run(query, [empid, name, department, city], function (err) {
+    const checkQuery = `SELECT * FROM faculty WHERE empid = ?`;
+    db.get(checkQuery, [empid], (err, row) => {
         if (err) {
-            console.error('Error inserting data:', err.message);
-            return res.status(500).send('Error inserting data.');
+            console.error('Error checking empid:', err.message);
+            return res.status(500).send('Error checking employee ID.');
         }
-        res.send('Faculty member added successfully!');
+        if (row) {
+            return res.status(400).send("Can't add: Employee ID already exists.");
+        }
+        const insertQuery = `INSERT INTO faculty (empid, name, department, city) VALUES (?, ?, ?, ?)`;
+        db.run(insertQuery, [empid, name, department, city], function (err) {
+            if (err) {
+                console.error('Error inserting data:', err.message);
+                return res.status(500).send('Error inserting data.');
+            }
+            res.send('Faculty member added successfully!');
+        });
     });
 });
 

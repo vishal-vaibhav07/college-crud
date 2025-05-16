@@ -76,6 +76,15 @@ function showSuccessMessage(message) {
     successModal.show();
 }
 
+// Show failure modal with a custom message
+function showFailureMessage(message) {
+    const failureModalMessage = document.getElementById('failureModalMessage');
+    failureModalMessage.textContent = message;
+
+    const failureModal = new bootstrap.Modal(document.getElementById('failureModal'));
+    failureModal.show();
+}
+
 // Delete a faculty member
 function deleteFaculty(id) {
     if (!confirm('Are you sure you want to delete this faculty member?')) return;
@@ -130,13 +139,18 @@ document.getElementById('faculty-form').addEventListener('submit', function (e) 
             city: city,
         }),
     })
-        .then(response => response.text())
-        .then(message => {
-            showSuccessMessage('Faculty onboarding successfully!');
-            fetchFaculty(); // Refresh the table
-            document.getElementById('faculty-form').reset(); // Clear the form
-        })
-        .catch(error => console.error('Error adding faculty:', error));
+    .then(async response => {
+        const message = await response.text();
+        if (!response.ok) {
+            showFailureMessage(message); // Shows server error (e.g., duplicate empid)
+            return;
+        }
+        showSuccessMessage('Faculty onboarding successfully!');
+        // Optionally refresh faculty table and reset form
+        fetchFaculty();
+        document.getElementById('faculty-form').reset();
+    })
+    .catch(error => showFailureMessage('An error occurred while adding faculty.'));
 });
 
 // Search students by name or registration number

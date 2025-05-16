@@ -76,6 +76,16 @@ function showSuccessMessage(message) {
     const successModal = new bootstrap.Modal(document.getElementById('successModal'));
     successModal.show();
 }
+
+// Add this to your students.js if not already present
+function showFailureMessage(message) {
+    const failureModalMessage = document.getElementById('failureModalMessage');
+    failureModalMessage.textContent = message;
+
+    const failureModal = new bootstrap.Modal(document.getElementById('failureModal'));
+    failureModal.show();
+}
+
 // Delete a student
 function deleteStudent(id) {
     if (!confirm('Are you sure you want to delete this student?')) return;
@@ -112,15 +122,22 @@ document.getElementById('student-form').addEventListener('submit', function (e) 
             city: city,
         }),
     })
-    .then(response => response.text())
-        .then(message => {
-            const modal = new bootstrap.Modal(document.getElementById('successModal'));
-            modal.show();
-            showSuccessMessage('Student onboarding successfully!');
-            fetchStudents(); // Refresh the table
-            document.getElementById('student-form').reset(); // Clear the form
-        })
-        .catch(error => console.error('Error adding student:', error));
+    .then(async response => {
+        const message = await response.text();
+        if (!response.ok) {
+            // Show popup for error (e.g., duplicate regno)
+            //alert(message);
+            showFailureMessage('Student onboarding failed! Due to existing registration number.');
+            
+            return;
+        }
+        const modal = new bootstrap.Modal(document.getElementById('successModal'));
+        modal.show();
+        showSuccessMessage('Student onboarding successfully!');
+        fetchStudents(); // Refresh the table
+        document.getElementById('student-form').reset(); // Clear the form
+    })
+    .catch(error => console.error('Error adding student:', error));
 });
 
 // Search students by name or registration number
