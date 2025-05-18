@@ -4,7 +4,11 @@
   "description": "A college management system for managing students and faculty.",
   "main": "server.js",
   "scripts": {
+<<<<<<< HEAD
     "start": "node server.js",
+=======
+    "start": "node server.js"
+>>>>>>> 6ce8dd47cf345f63881956b9b9fac61e12f7943f
     "postinstall": "npm rebuild sqlite3"
   },
   "keywords": [
