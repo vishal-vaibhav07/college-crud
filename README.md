@@ -1,2 +1,0 @@
-# college-crud
-CRUD Operation
